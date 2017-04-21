@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
 
@@ -8,11 +6,14 @@ public class PlayerController : MonoBehaviour {
     public float MaxSpeed = 5f;
     public float JumpForce = 1000f;
     public Transform GroundCheck;
+    public BoxCollider2D pickableRange;
 
     [HideInInspector] public bool Jump = false;
     [HideInInspector] public bool FacingRight = true;
 
-    private bool grounded = false;
+    private bool _grounded = false;
+    private PickableObject _objectInRange = null;
+    private PickableObject _pickedObject = null;
 
     private Rigidbody2D _rigidbody2d;
     private float inverseMoveTime;
@@ -28,13 +29,33 @@ public class PlayerController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        grounded = Physics2D.Linecast(transform.position, GroundCheck.position, 1 << LayerMask.NameToLayer("Ground"));
+        _grounded = Physics2D.Linecast(transform.position, GroundCheck.position, 1 << LayerMask.NameToLayer("Ground"));
 
-        if (Input.GetButtonDown("Jump") && grounded)
+        if (Input.GetButtonDown("Jump") && _grounded)
         {
             Jump = true;
         }
-        
+
+        if (Input.GetButtonDown("Interact"))
+        {
+            if(_objectInRange != null)
+                _pickedObject = _objectInRange;
+
+            if(_pickedObject != null)
+            {
+                if (!_pickedObject.IsPicked())
+                {
+                    _pickedObject.SetPickedUp(true);
+                    pickableRange.enabled = false;
+                }
+                else
+                {
+                    _pickedObject.SetPickedUp(false);
+                    pickableRange.enabled = true;
+                    _pickedObject = null;
+                }
+            }
+        }
     }
 
     void FixedUpdate()
@@ -74,4 +95,22 @@ public class PlayerController : MonoBehaviour {
     {
         _gameManager.RestartLevel();
     }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("Pickable"))
+        {
+            if(_pickedObject == null)
+                _objectInRange = other.gameObject.GetComponent<PickableObject>();
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("Pickable"))
+        {
+            _objectInRange = null;
+        }
+    }
+
 }
