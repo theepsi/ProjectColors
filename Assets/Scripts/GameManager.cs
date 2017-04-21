@@ -16,16 +16,11 @@ public class GameManager : MonoBehaviour {
     public Material Default;
 
     private ColorBlock[] _colorBlocks;
-    private List<GameObject> _blocks;
 
     // Use this for initialization
     void Start () {
-        _blocks = new List<GameObject>();
-        SetActivePower(BlockType.WHITE);
         _colorBlocks = FindObjectsOfType<ColorBlock>();
-
-        foreach (ColorBlock block in _colorBlocks)
-            _blocks.Add(block.gameObject);
+        SetActivePower(BlockType.WHITE);
     }
 	
 	// Update is called once per frame
@@ -65,12 +60,12 @@ public class GameManager : MonoBehaviour {
 
     void CheckColorBlocks()
     {
-        foreach (GameObject block in _blocks)
+        foreach (ColorBlock block in _colorBlocks)
         {
             if (_currentColor == block.GetComponent<ColorBlock>().Type)
-                block.SetActive(false);
+                block.gameObject.SetActive(false);
             else
-                block.SetActive(true);
+                block.gameObject.SetActive(true);
         }
     }
 }
