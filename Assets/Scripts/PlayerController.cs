@@ -16,10 +16,11 @@ public class PlayerController : MonoBehaviour {
 
     private Rigidbody2D _rigidbody2d;
     private float inverseMoveTime;
+    private GameManager _gameManager;
 
     // Use this for initialization
     void Awake () {
-
+        _gameManager = FindObjectOfType<GameManager>();
         _rigidbody2d = GetComponent<Rigidbody2D>();
         Jump = false;
     }
@@ -33,7 +34,8 @@ public class PlayerController : MonoBehaviour {
         {
             Jump = true;
         }
-	}
+        
+    }
 
     void FixedUpdate()
     {
