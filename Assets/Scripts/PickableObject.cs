@@ -25,6 +25,7 @@ public class PickableObject : MonoBehaviour {
     public void SetPickedUp(bool p)
     {
         _pickedUp = p;
+        _rigidbody2d.freezeRotation = p;
     }
 
     public bool IsPicked()

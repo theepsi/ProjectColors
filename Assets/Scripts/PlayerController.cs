@@ -6,12 +6,15 @@ public class PlayerController : MonoBehaviour {
     public float MaxSpeed = 5f;
     public float JumpForce = 1000f;
     public Transform GroundCheck;
+    public Transform WallCheck;
     public BoxCollider2D pickableRange;
 
     [HideInInspector] public bool Jump = false;
     [HideInInspector] public bool FacingRight = true;
 
     private bool _grounded = false;
+    private bool _againstWall = false;
+    private bool _canMove = true;
     private PickableObject _objectInRange = null;
     private PickableObject _pickedObject = null;
 
@@ -30,6 +33,10 @@ public class PlayerController : MonoBehaviour {
 	void Update () {
 
         _grounded = Physics2D.Linecast(transform.position, GroundCheck.position, 1 << LayerMask.NameToLayer("Ground"));
+
+        Vector3 playerUpperTransform = new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z);
+
+        _againstWall = Physics2D.Linecast(playerUpperTransform, WallCheck.position, 1 << LayerMask.NameToLayer("Ground"));
 
         if (Input.GetButtonDown("Jump") && _grounded)
         {
@@ -64,7 +71,17 @@ public class PlayerController : MonoBehaviour {
 
         //Anim set speed;
 
-        if (horizontal * _rigidbody2d.velocity.x < MaxSpeed)
+        if (_againstWall)
+        {
+            if ((FacingRight && horizontal > 0) || (!FacingRight && horizontal < 0))
+                _canMove = false;
+            else
+                _canMove = true;
+        }
+        else
+            _canMove = true;
+
+        if (horizontal * _rigidbody2d.velocity.x < MaxSpeed && _canMove)
             _rigidbody2d.AddForce(Vector2.right * horizontal * MoveForce);
 
         if (Mathf.Abs(_rigidbody2d.velocity.x) > MaxSpeed)
