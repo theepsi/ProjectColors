@@ -10,11 +10,10 @@ public class Controller2D : RaycastController {
     public override void Start()
     {
         base.Start();
-
-
+        
     }
 
-    public void Move(Vector3 velocity)
+    public void Move(Vector3 velocity, bool standingOnPlatform = false)
     {
         UpdateRaycastOrigins();
         Collisions.Reset();
@@ -26,6 +25,11 @@ public class Controller2D : RaycastController {
             VerticalCollisions(ref velocity);
         
         transform.Translate(velocity);
+
+        if (standingOnPlatform)
+        {
+            Collisions.Below = true;
+        }
     }
 
     void HorizontalCollisions(ref Vector3 velocity)
@@ -43,6 +47,11 @@ public class Controller2D : RaycastController {
 
             if (hit)
             {
+
+                if (hit.distance == 0)
+                {
+                    continue;
+                }
                 velocity.x = (hit.distance - SkinWidth) * directionX;
                 rayLength = hit.distance;
 
@@ -80,7 +89,7 @@ public class Controller2D : RaycastController {
     {
         public bool Above, Below;
         public bool Left, Right;
-
+        
         public void Reset()
         {
             Above = Below = false;

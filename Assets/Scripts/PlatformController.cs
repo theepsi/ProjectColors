@@ -7,7 +7,10 @@ public class PlatformController : RaycastController {
     public Vector3 Move;
     public LayerMask PassengersMask;
 
-	public override void Start () {
+    List<PassengerMovement> _passengerMovement;
+    Dictionary<Transform, Controller2D> _passengerDictionary = new Dictionary<Transform, Controller2D>();
+
+    public override void Start () {
         base.Start();
 	}
 	
@@ -17,13 +20,32 @@ public class PlatformController : RaycastController {
 
         Vector3 velocity = Move * Time.deltaTime;
 
-        MovePassengers(velocity);
+        CalculatePassengerMovement(velocity);
+
+        MovePassengers(true);
         transform.Translate(velocity);
-	}
+        MovePassengers(false);
+    }
 
-    void MovePassengers(Vector3 velocity)
+    void MovePassengers(bool beforeMovePlatform)
     {
+        foreach (PassengerMovement passenger in _passengerMovement)
+        {
+            if (!_passengerDictionary.ContainsKey(passenger.PTransform))
+            {
+                _passengerDictionary.Add(passenger.PTransform, passenger.PTransform.GetComponent<Controller2D>());
+            }
 
+            if (passenger.MoveBeforePlatform == beforeMovePlatform)
+            {
+                _passengerDictionary[passenger.PTransform].Move(passenger.Velocity, passenger.StandingOnPlatform);
+            }
+        }
+    }
+
+    void CalculatePassengerMovement(Vector3 velocity)
+    {
+        _passengerMovement = new List<PassengerMovement>();
         HashSet<Transform> movedPassengers = new HashSet<Transform>();
 
         float directionX = Mathf.Sign(velocity.x);
@@ -47,7 +69,7 @@ public class PlatformController : RaycastController {
                         float pushX = (directionY == 1) ? velocity.x : 0;
                         float pushY = velocity.y - (hit.distance - SkinWidth) * directionY;
 
-                        hit.transform.Translate(new Vector3(pushX, pushY));
+                        _passengerMovement.Add(new PassengerMovement(hit.transform, new Vector3(pushX, pushY), directionY == 1, true));
                     }
                 }
             }
@@ -69,9 +91,9 @@ public class PlatformController : RaycastController {
                     {
                         movedPassengers.Add(hit.transform);
                         float pushX = velocity.x - (hit.distance - SkinWidth) * directionX;
-                        float pushY = 0;
+                        float pushY = -SkinWidth;
 
-                        hit.transform.Translate(new Vector3(pushX, pushY));
+                        _passengerMovement.Add(new PassengerMovement(hit.transform, new Vector3(pushX, pushY), false, true));
                     }
                 }
 
@@ -94,10 +116,26 @@ public class PlatformController : RaycastController {
                         float pushX = velocity.x;
                         float pushY = velocity.y;
 
-                        hit.transform.Translate(new Vector3(pushX, pushY));
+                        _passengerMovement.Add(new PassengerMovement(hit.transform, new Vector3(pushX, pushY), true, false));
                     }
                 }
             }
+        }
+    }
+
+    struct PassengerMovement
+    {
+        public Transform PTransform;
+        public Vector3 Velocity;
+        public bool StandingOnPlatform;
+        public bool MoveBeforePlatform;
+
+        public PassengerMovement(Transform _transform, Vector3 _velocity, bool _standingOnPlatform, bool _moveBeforePlatform)
+        {
+            PTransform = _transform;
+            Velocity = _velocity;
+            StandingOnPlatform = _standingOnPlatform;
+            MoveBeforePlatform = _moveBeforePlatform;
         }
     }
 }
