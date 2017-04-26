@@ -2,8 +2,8 @@
 
 public class PlayerController : MonoBehaviour {
 
-    public float MoveForce = 365f;
-    public float MaxSpeed = 5f;
+    public float MoveForce = 4f;
+    //public float MaxSpeed = 5f;
     public float JumpForce = 1000f;
     public Transform GroundCheck;
     public Transform WallCheck;
@@ -81,11 +81,14 @@ public class PlayerController : MonoBehaviour {
         else
             _canMove = true;
 
-        if (horizontal * _rigidbody2d.velocity.x < MaxSpeed && _canMove)
-            _rigidbody2d.AddForce(Vector2.right * horizontal * MoveForce);
+        if (_canMove)
+            _rigidbody2d.velocity = new Vector2(horizontal * MoveForce, _rigidbody2d.velocity.y);
 
-        if (Mathf.Abs(_rigidbody2d.velocity.x) > MaxSpeed)
-            _rigidbody2d.velocity = new Vector2(Mathf.Sign(_rigidbody2d.velocity.x) * MaxSpeed, _rigidbody2d.velocity.y);
+        //if (horizontal * _rigidbody2d.velocity.x < MaxSpeed && _canMove)
+        //    _rigidbody2d.AddForce(Vector2.right * horizontal * MoveForce);
+
+            //if (Mathf.Abs(_rigidbody2d.velocity.x) > MaxSpeed)
+            //    _rigidbody2d.velocity = new Vector2(Mathf.Sign(_rigidbody2d.velocity.x) * MaxSpeed, _rigidbody2d.velocity.y);
 
         if (horizontal > 0 && !FacingRight)
             Flip();
