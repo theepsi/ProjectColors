@@ -275,10 +275,14 @@ MonoBehaviour:
   _horizontalRaySpacing: 0
   _verticalRaySpacing: 0
   _collider: {fileID: 0}
-  Move: {x: 0, y: -1, z: 0}
   PassengersMask:
     serializedVersion: 2
     m_Bits: 512
+  LocalWaypoints:
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 5, z: 0}
+  - {x: 5, y: 5, z: 0}
+  Speed: 2
 --- !u!61 &836457766
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -350,7 +354,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 836457764}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.26, y: 1.548, z: 0}
+  m_LocalPosition: {x: 12.67, y: -0.99, z: 0}
   m_LocalScale: {x: 2.2055979, y: 0.8720309, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
