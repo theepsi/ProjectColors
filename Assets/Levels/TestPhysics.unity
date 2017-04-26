@@ -160,6 +160,7 @@ MonoBehaviour:
   _horizontalRaySpacing: 0
   _verticalRaySpacing: 0
   _collider: {fileID: 0}
+  PlayerInput: {x: 0, y: 0}
 --- !u!61 &699160152
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -282,7 +283,10 @@ MonoBehaviour:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 5, z: 0}
   - {x: 5, y: 5, z: 0}
-  Speed: 2
+  Clyclic: 1
+  WaitTime: 0.5
+  EaseAmount: 0
+  Speed: 4
 --- !u!61 &836457766
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -562,6 +566,7 @@ GameObject:
   - component: {fileID: 1801022984}
   - component: {fileID: 1801022983}
   - component: {fileID: 1801022982}
+  - component: {fileID: 1801022987}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -620,7 +625,7 @@ Camera:
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
-  m_AllowMSAA: 1
+  m_AllowMSAA: 0
   m_ForceIntoRT: 0
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
@@ -639,3 +644,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1801022987
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1801022981}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed53c267e679ac74dbff8bbbbba87a00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Player: {fileID: 699160151}
+  FocusAreaSize: {x: 3, y: 5}
+  VerticalOffset: 1
+  LookAheadDistanceX: 4
+  lookSmoothTimeX: 0.5
+  VerticalSmoothTime: 0.1
