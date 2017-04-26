@@ -6,11 +6,16 @@ using UnityEngine;
 public class RaycastController : MonoBehaviour {
 
     public const float SkinWidth = .015f;
+    const float _distanceBetweenRays = 0.25f;
+
+
 
     public LayerMask CollisionMask;
 
-    public int HorizontalRayCount = 4;
-    public int VerticalRayCount = 4;
+    [HideInInspector]
+    public int HorizontalRayCount;
+    [HideInInspector]
+    public int VerticalRayCount;
 
     [HideInInspector]
     public float _horizontalRaySpacing;
@@ -46,6 +51,12 @@ public class RaycastController : MonoBehaviour {
     {
         Bounds bounds = _collider.bounds;
         bounds.Expand(SkinWidth * -2);
+
+        float boundsWidth = bounds.size.x;
+        float boundsHeight = bounds.size.y;
+
+        HorizontalRayCount = Mathf.RoundToInt(boundsHeight / _distanceBetweenRays);
+        VerticalRayCount = Mathf.RoundToInt(boundsWidth / _distanceBetweenRays);
 
         HorizontalRayCount = Mathf.Clamp(HorizontalRayCount, 2, int.MaxValue);
         VerticalRayCount = Mathf.Clamp(VerticalRayCount, 2, int.MaxValue);
