@@ -6,7 +6,7 @@ public class KillPlayer : MonoBehaviour {
     {
         if (other.gameObject.tag == "Player")
         {
-            other.GetComponent<PlayerController>().KillPlayer();
+            other.GetComponent<Player>().KillPlayer();
         }
     }
 }

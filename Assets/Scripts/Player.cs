@@ -22,8 +22,10 @@ public class Player : MonoBehaviour {
     Controller2D _controller;
 
     Vector2 _directionalInput;
+    GameManager _gameManager;
 
-	void Start () {
+    void Start () {
+        _gameManager = FindObjectOfType<GameManager>();
         _controller = GetComponent<Controller2D>();
 
         _gravity = -(2 * JumpHeight) / Mathf.Pow(TimeToJumpApex, 2);
@@ -59,5 +61,10 @@ public class Player : MonoBehaviour {
         float targetVelocityX = _directionalInput.x * _moveSpeed;
         _velocity.x = Mathf.SmoothDamp(_velocity.x, targetVelocityX, ref _velocityXSmoothing, (_controller.Collisions.Below) ? _accelerationTimeGrounded : _accelerationTimeAirborne);
         _velocity.y += _gravity * Time.deltaTime;
+    }
+
+    public void KillPlayer()
+    {
+        _gameManager.RestartLevel();
     }
 }

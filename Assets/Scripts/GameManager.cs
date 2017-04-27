@@ -16,12 +16,12 @@ public class GameManager : MonoBehaviour {
     public Material Default;
 
     private ColorBlock[] _colorBlocks;
-    private PlayerController _player;
+    private Player _player;
 
     // Use this for initialization
     void Start () {
         _colorBlocks = FindObjectsOfType<ColorBlock>();
-        _player = FindObjectOfType<PlayerController>();
+        _player = FindObjectOfType<Player>();
         SetActivePower(BlockType.WHITE);
     }
 	

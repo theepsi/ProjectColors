@@ -8,8 +8,6 @@ public class RaycastController : MonoBehaviour {
     public const float SkinWidth = .015f;
     const float _distanceBetweenRays = 0.25f;
 
-
-
     public LayerMask CollisionMask;
 
     [HideInInspector]
@@ -24,6 +22,7 @@ public class RaycastController : MonoBehaviour {
 
     [HideInInspector]
     public BoxCollider2D _collider;
+
     public RaycastOrigins _raycastOrigins;
 
     public virtual void Awake()
