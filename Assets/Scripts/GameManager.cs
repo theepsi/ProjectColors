@@ -41,23 +41,30 @@ public class GameManager : MonoBehaviour {
 
     void SetActivePower(BlockType color)
     {
-        switch (color)
+        if (!CheckPlayerInsideSwitchBlock())
         {
-            case BlockType.WHITE:
-                ActivePower.GetComponent<Renderer>().material = White;
-                break;
-            case BlockType.RED:
-                ActivePower.GetComponent<Renderer>().material = Red;
-                break;
-            case BlockType.BLUE:
-                ActivePower.GetComponent<Renderer>().material = Blue;
-                break;
-            case BlockType.GREEN:
-                ActivePower.GetComponent<Renderer>().material = Green;
-                break;
+            switch (color)
+            {
+                case BlockType.WHITE:
+                    ActivePower.GetComponent<Renderer>().material = White;
+                    break;
+                case BlockType.RED:
+                    ActivePower.GetComponent<Renderer>().material = Red;
+                    break;
+                case BlockType.BLUE:
+                    ActivePower.GetComponent<Renderer>().material = Blue;
+                    break;
+                case BlockType.GREEN:
+                    ActivePower.GetComponent<Renderer>().material = Green;
+                    break;
+            }
+            _currentColor = color;
+            CheckColorBlocks();
         }
-        _currentColor = color;
-        CheckColorBlocks();
+        else
+        {
+            print("You can't do that now!");
+        }
     }
 
     void CheckColorBlocks()
@@ -83,6 +90,23 @@ public class GameManager : MonoBehaviour {
 
         // TODO: restart current level, this must call death menu in the future, letting the player to choose RESET or MAIN MENU
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    bool CheckPlayerInsideSwitchBlock()
+    {
+        bool ret = false;
+        foreach (ColorBlock block in _colorBlocks)
+        {
+            if (_currentColor == block.GetComponent<ColorBlock>().Type)
+            {
+                ret = block.CheckTargetInside(_player.transform.position);
+
+                if (ret)
+                    break;
+            }
+                
+        }
+        return ret;
     }
 
 }

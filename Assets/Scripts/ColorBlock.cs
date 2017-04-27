@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
+[RequireComponent(typeof(BoxCollider2D))]
 public class ColorBlock : MonoBehaviour {
 
     public BlockType Type = BlockType.DEFAULT;
@@ -10,11 +11,18 @@ public class ColorBlock : MonoBehaviour {
     private Renderer _renderer;
     private GameManager _gameManager;
 
+    BoxCollider2D _collider;
+
+    Bounds _storedBounds;
+
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 
         _renderer = GetComponent<Renderer>();
         _gameManager = FindObjectOfType<GameManager>();
+        _collider = GetComponent<BoxCollider2D>();
+
+        _storedBounds = _collider.bounds;
 
         UpdateColor();
     }
@@ -41,5 +49,21 @@ public class ColorBlock : MonoBehaviour {
                 _renderer.material = _gameManager.Green;
                 break;
         }
+    }
+
+    public bool CheckTargetInside(Vector2 target)
+    {
+        float offset = 0.5f;
+
+        if (target.x - offset >= _storedBounds.max.x)
+            return false;
+        else if (target.x + offset <= _storedBounds.min.x)
+            return false;
+        else if (target.y >= _storedBounds.max.y)
+            return false;
+        else if (target.y <= _storedBounds.min.y)
+            return false;
+        else
+            return true;
     }
 }
