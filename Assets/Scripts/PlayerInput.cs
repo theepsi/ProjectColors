@@ -20,5 +20,10 @@ public class PlayerInput : MonoBehaviour {
         {
             _player.OnJumpInput();
         }
+
+        if (Input.GetButtonDown("Interact"))
+        {
+            _player.OnInteract();
+        }
     }
 }

@@ -9,6 +9,9 @@ public class Player : MonoBehaviour {
     public float JumpHeight = 4;
     public float TimeToJumpApex = .4f;
 
+    bool _carryingObject = false;
+    PickableObject _objectCarried;
+
     float _accelerationTimeAirborne = .2f;
     float _accelerationTimeGrounded = .1f;
 
@@ -23,6 +26,8 @@ public class Player : MonoBehaviour {
 
     Vector2 _directionalInput;
     GameManager _gameManager;
+
+    [HideInInspector] public bool FacingRight = true;
 
     void Start () {
         _gameManager = FindObjectOfType<GameManager>();
@@ -41,6 +46,11 @@ public class Player : MonoBehaviour {
 
         if (_controller.Collisions.Above || _controller.Collisions.Below)
             _velocity.y = 0;
+
+        if (_directionalInput.x > 0 && !FacingRight)
+            Flip();
+        else if (_directionalInput.x < 0 && FacingRight)
+            Flip();
     }
 
     public void SetDirectionalInput(Vector2 input)
@@ -56,6 +66,30 @@ public class Player : MonoBehaviour {
         }
     }
 
+    public void OnInteract()
+    {
+        if (!_carryingObject)
+        {
+            // Check if can be next object
+            Vector3 pickupPosOrigin = new Vector3(transform.position.x, transform.position.y - .5f, transform.position.z);
+            RaycastHit2D hit = Physics2D.Raycast(pickupPosOrigin, Vector2.right * transform.localScale.x, 2f, 1 << LayerMask.NameToLayer("PickableObject"));
+            Debug.DrawRay(pickupPosOrigin, Vector2.right * transform.localScale.x, Color.green);
+
+            if (hit)
+            {
+                _objectCarried = hit.transform.GetComponent<PickableObject>();
+                _objectCarried.SetPickedUp(true);
+                _carryingObject = true;
+            }
+        }
+        else
+        {
+            _carryingObject = false;
+            _objectCarried.SetPickedUp(false);
+            _objectCarried = null;
+        }
+    }
+
     void CalculateVelocity()
     {
         float targetVelocityX = _directionalInput.x * _moveSpeed;
@@ -66,5 +100,13 @@ public class Player : MonoBehaviour {
     public void KillPlayer()
     {
         _gameManager.RestartLevel();
+    }
+
+    void Flip()
+    {
+        FacingRight = !FacingRight;
+        Vector3 vScale = transform.localScale;
+        vScale.x *= -1;
+        transform.localScale = vScale;
     }
 }
