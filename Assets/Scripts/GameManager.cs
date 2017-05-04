@@ -18,11 +18,13 @@ public class GameManager : MonoBehaviour {
     private ColorBlock[] _colorBlocks;
     private Player _player;
 
+    private bool _changingColor = false;
+
     // Use this for initialization
     void Start () {
         _colorBlocks = FindObjectsOfType<ColorBlock>();
         _player = FindObjectOfType<Player>();
-        SetActivePower(BlockType.WHITE);
+        ActivePower.GetComponent<Renderer>().material = White;
     }
 	
 	// Update is called once per frame
@@ -41,8 +43,10 @@ public class GameManager : MonoBehaviour {
 
     void SetActivePower(BlockType color)
     {
-        if (!CheckPlayerInsideSwitchBlock())
+        if (!CheckPlayerInsideSwitchBlock() && !_changingColor)
         {
+            // TODO: improve this feature
+            // StartCoroutine(WaitChangeColor(0.5f));
             switch (color)
             {
                 case BlockType.WHITE:
@@ -107,6 +111,17 @@ public class GameManager : MonoBehaviour {
                 
         }
         return ret;
+    }
+
+    public IEnumerator WaitChangeColor(float waitseconds)
+    {
+        Time.timeScale = 0;
+        _changingColor = true;
+
+        yield return new WaitForSecondsRealTime(waitseconds);
+
+        Time.timeScale = 1;
+        _changingColor = false;
     }
 
 }

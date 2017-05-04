@@ -73,7 +73,7 @@ public class Player : MonoBehaviour {
             // Check if can be next object
             Vector3 pickupPosOrigin = new Vector3(transform.position.x, transform.position.y - .5f, transform.position.z);
             RaycastHit2D hit = Physics2D.Raycast(pickupPosOrigin, Vector2.right * transform.localScale.x, 2f, 1 << LayerMask.NameToLayer("PickableObject"));
-            Debug.DrawRay(pickupPosOrigin, Vector2.right * transform.localScale.x, Color.green);
+            //Debug.DrawRay(pickupPosOrigin, Vector2.right * transform.localScale.x, Color.green);
 
             if (hit)
             {
